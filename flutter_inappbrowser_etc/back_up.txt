@@ -1,0 +1,191 @@
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:flutter_inappbrowser/flutter_inappbrowser.dart';
+
+Future main() async {
+  runApp(new MyApp());
+}
+
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => new _MyAppState();
+}
+class _MyAppState extends State<MyApp> {
+  final Completer<InAppWebViewController> _controller =
+  Completer<InAppWebViewController>();
+
+  InAppWebViewController webView;
+  String url = "";
+  double progress = 0;
+  int check = 0;
+
+  Widget favoriteButton() {
+    return FutureBuilder<InAppWebViewController>(
+        future: _controller.future,
+        builder: (BuildContext context,
+            AsyncSnapshot<InAppWebViewController> controller) {
+          if (controller.hasData) {
+            return FloatingActionButton(
+              mini: true,
+              onPressed: () async {
+                controller.data.injectScriptCode(
+                    """cube.material.color.setHex('0x' + Math.floor(Math.random() * 16777215).toString(16));""");
+              },
+              child: const Icon(Icons.refresh),
+            );
+          }
+          return Container();
+        });
+  }
+  Widget downButton()
+  {
+    return FutureBuilder<InAppWebViewController>(
+        future: _controller.future,
+        builder: (BuildContext context,
+            AsyncSnapshot<InAppWebViewController> controller) {
+          if (controller.hasData) {
+            return FloatingActionButton(
+              mini: true,
+              onPressed: () async {
+                controller.data.injectScriptCode(
+                    """cube.rotation.x+=0.1""");
+              },
+              child: const Icon(Icons.keyboard_arrow_down),
+            );
+          }
+          return Container();
+        });
+  }
+  Widget upButton()
+  {
+    return FutureBuilder<InAppWebViewController>(
+        future: _controller.future,
+        builder: (BuildContext context,
+            AsyncSnapshot<InAppWebViewController> controller) {
+          if (controller.hasData) {
+            return FloatingActionButton(
+              mini: true,
+              onPressed: () async {
+                controller.data.injectScriptCode(
+                    """cube.rotation.x-=0.1""");
+              },
+              child: const Icon(Icons.keyboard_arrow_up),
+            );
+          }
+          return Container();
+        });
+  }
+  Widget leftButton()
+  {
+    return FutureBuilder<InAppWebViewController>(
+        future: _controller.future,
+        builder: (BuildContext context,
+            AsyncSnapshot<InAppWebViewController> controller) {
+          if (controller.hasData) {
+            return FloatingActionButton(
+              mini: true,
+              onPressed: () async {
+                controller.data.injectScriptCode(
+                    """cube.rotation.y-=0.1""");
+              },
+              child: const Icon(Icons.keyboard_arrow_left),
+            );
+          }
+          return Container();
+        });
+  }
+  Widget rightButton()
+  {
+    return FutureBuilder<InAppWebViewController>(
+        future: _controller.future,
+        builder: (BuildContext context,
+            AsyncSnapshot<InAppWebViewController> controller) {
+          if (controller.hasData) {
+            return FloatingActionButton(
+              mini: true,
+              onPressed: () async {
+                controller.data.injectScriptCode(
+                    """cube.rotation.y+=0.1""");
+              },
+              child: const Icon(Icons.keyboard_arrow_right),
+            );
+          }
+          return Container();
+        });
+  }
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        body: Container(
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.all(10.0),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.blueAccent)
+                  ),
+                  child: InAppWebView(
+                    initialFile: "assets/threejs.html",
+                    initialHeaders: {
+
+                    },
+                    initialOptions: {
+                      "useOnLoadResource": true,
+                    },
+                    onWebViewCreated: (InAppWebViewController controller) {
+                      _controller.complete(controller);
+                      webView = controller;
+                      controller.loadFile('assets/threejs.html');
+//                      controller.loadUrl('assets/threejs.html');
+                    },
+                    onLoadStop: (InAppWebViewController controller, String url) {
+//                      controller.injectScriptCode("""
+//                            window.flutter_inappbrowser.callHandler('test', 'Text from Javascript').then(function(result) {
+//                              console.log(result);
+//                              alert(result);
+//                            });
+//                            """);
+                    },
+                    onScrollChanged: (InAppWebViewController controller, int x, int y){
+                      print("this");
+                    },
+                    onLoadStart: (InAppWebViewController controller, String url) {
+                      print("started $url");
+                      setState((){
+                        this.url = url;
+//                        controller.addJavaScriptHandler('test',(arguments) async {print("test");print(arguments);});
+                        });
+                    },
+                    onProgressChanged: (InAppWebViewController controller, int progress) {
+                      setState(() {
+                        this.progress = progress/100;
+                      });
+                    },
+                  ),
+                ),
+              ),
+            ].where((Object o) => o != null).toList(),
+          ),
+        ),
+        floatingActionButton: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            favoriteButton(), downButton(),leftButton(), upButton(),rightButton(),
+          ],
+        ),
+      ),
+    );
+  }
+}
