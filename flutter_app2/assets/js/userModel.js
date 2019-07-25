@@ -1,12 +1,6 @@
 //Read file from input button
 var model_file = document.getElementById('obj_file');
 
-//model_file.addEventListener('change', function (event) {
-//
-//    var file = event.target.files[0];
-//    loadFile(file);
-//
-//});
 
 //Drag and drop files anywhere onto the viewer
 document.addEventListener('dragover', function (event) {
