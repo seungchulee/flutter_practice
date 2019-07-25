@@ -1,11 +1,5 @@
 var modelAndTextures = document.getElementById('modelPlusTexture');
 
-//modelAndTextures.addEventListener('change', function (event) {
-//
-//    var files = event.currentTarget.files;
-//    loadFiles(files);
-//
-//});
 
 //LOAD AND ADD TO SCENE -> .OBJ, .MTL, .DAE AND ASSOCIATED IMAGE FILES
 var loadFiles = function (files) {
