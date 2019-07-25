@@ -122,10 +122,6 @@ function initScene(index) {
         }
     }
 
-//    document.getElementById('fullscreenBtn').addEventListener('click', function () {
-//        toggleFullscreen();
-//    });
-  
     ambient = new THREE.AmbientLight(0x404040);
     $('#ambient_light').change(function () {
         if (amb.checked) {
@@ -227,11 +223,7 @@ function initScene(index) {
     var sceneInfo = modelList[index]; //index from array of sample models in html select options
     loader = new THREE.OBJLoader(manager);
     var url = sceneInfo.url;
-//    var as = "/android_asset/flutter_assets/assets/";
-//    as+=url;
-//    url = as;
-//    alert(url);
-
+    
     //progress/loading bar
     var onProgress = function (data) {
         if (data.lengthComputable) { //if size of file transfer is known
@@ -340,16 +332,8 @@ function removeModel() {
 
     $("#red, #green, #blue, #ambient_red, #ambient_green, #ambient_blue").slider("value", 127); //Reset colour sliders
 
-//    amb.checked = false; rot1.checked = false; wire.checked = false;
-//    model_wire.checked = false; phong.checked = false; xray.checked = false;
-//    glow.checked = false;
-//    grid.checked = false; polar_grid.checked = false;
-//    axis.checked = false; bBox.checked = false; smooth.checked = false;
-//    transform.checked = false, smooth.disabled = false; //Uncheck any checked boxes
     
     transformControls.detach(scene);
-
-//    document.getElementById('smooth-model').innerHTML = "Smooth Model";
 
     $('#rot_slider').slider({
         disabled: true //disable the rotation slider
