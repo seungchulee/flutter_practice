@@ -329,7 +329,6 @@ THREE.OBJLoader = (function () {
         load: function (url, onLoad, onProgress, onError) {
 
             var scope = this;
-
             var loader = new THREE.FileLoader(scope.manager);
             loader.setPath(this.path);
             loader.load(url, function (text) {

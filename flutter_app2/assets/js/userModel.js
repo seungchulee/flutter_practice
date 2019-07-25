@@ -1,12 +1,12 @@
 //Read file from input button
 var model_file = document.getElementById('obj_file');
 
-model_file.addEventListener('change', function (event) {
-
-    var file = event.target.files[0];
-    loadFile(file);
-
-}); 
+//model_file.addEventListener('change', function (event) {
+//
+//    var file = event.target.files[0];
+//    loadFile(file);
+//
+//});
 
 //Drag and drop files anywhere onto the viewer
 document.addEventListener('dragover', function (event) {
@@ -54,7 +54,7 @@ var loadFile = function (file) {
             statsNode.innerHTML = 'Loaded : ' + percentage + '%' + ' of ' + filename
             + '<br>'
             + '<progress value="0" max="100" class="progress"></progress>';
-            $('.progress').css({ 'width': percentage + '%' });////Width of progress bar set to the current percentage of model loaded (progress bar therefore increases in width as model loads)
+            $('.progress').css({ 'width': percentage + '%' }); ////Width of progress bar set to the current percentage of model loaded (progress bar therefore increases in width as model loads)
             $('.progress').val(percentage); //Set progress bar value to the current amount loaded
         }
 

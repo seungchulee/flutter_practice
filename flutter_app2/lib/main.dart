@@ -146,17 +146,6 @@ class _MyAppState extends State<MyApp> {
     positionYDelta = currentPositionY - initialPositionY;
     positionXDelta = currentPositionX - initialPositionX;
     print("X : $positionXDelta, Y : $positionYDelta");
-//    FutureBuilder<InAppWebViewController>(
-////        _controller.complete(controller);
-////        webView = controller;
-//        future: _controller.future,
-//        builder: (BuildContext context, AsyncSnapshot<InAppWebViewController> controller) {
-//          return GestureDetector(
-//            onTap: () async {
-//              controller.data.injectScriptCode("""cube.rotation.y+=0.1""");
-//            },
-//          );
-//        });
   }
 
   @override
@@ -168,18 +157,21 @@ class _MyAppState extends State<MyApp> {
           home: Scaffold(
             body:
             Container(
+//              margin: const EdgeInsets.all(10.0),
+//              decoration: BoxDecoration(
+//                  border: Border.all(color: Colors.blueAccent)
+//              ),
               child: InAppWebView(
-                initialFile: "assets/threejs.html",
+                initialFile: "assets/index.html",
                 initialHeaders: {
                 },
                 initialOptions: {
-                  "useOnLoadResource": true,
                 },
                 onWebViewCreated: (InAppWebViewController controller) {
                   _controller.complete(controller);
                   webView = controller;
-                  controller.loadFile('assets/threejs.html');
-//              controller.loadUrl('https://www.google.com');
+                  controller.loadFile('assets/index.html');
+//                  controller.loadUrl('https://www.google.com');
                 },
                 onLoadStop: (InAppWebViewController controller, String url) {
 //                      controller.injectScriptCode("""
@@ -188,9 +180,6 @@ class _MyAppState extends State<MyApp> {
 //                              alert(result);
 //                            });
 //                            """);
-                },
-                onScrollChanged: (InAppWebViewController controller, int x, int y) {
-                  print("this");
                 },
                 onLoadStart: (InAppWebViewController controller, String url) {
                   print("started $url");
@@ -207,16 +196,16 @@ class _MyAppState extends State<MyApp> {
                 },
               ),
             ),
-            floatingActionButton: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                favoriteButton(),
-                downButton(),
-                leftButton(),
-                upButton(),
-                rightButton(),
-              ],
-            ),
+//            floatingActionButton: Row(
+//              mainAxisAlignment: MainAxisAlignment.center,
+//              children: <Widget>[
+//                favoriteButton(),
+//                downButton(),
+//                leftButton(),
+//                upButton(),
+//                rightButton(),
+//              ],
+//            ),
           ),
         )
     );

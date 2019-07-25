@@ -122,9 +122,9 @@ function initScene(index) {
         }
     }
 
-    document.getElementById('fullscreenBtn').addEventListener('click', function () {
-        toggleFullscreen();
-    });
+//    document.getElementById('fullscreenBtn').addEventListener('click', function () {
+//        toggleFullscreen();
+//    });
   
     ambient = new THREE.AmbientLight(0x404040);
     $('#ambient_light').change(function () {
@@ -227,6 +227,10 @@ function initScene(index) {
     var sceneInfo = modelList[index]; //index from array of sample models in html select options
     loader = new THREE.OBJLoader(manager);
     var url = sceneInfo.url;
+//    var as = "/android_asset/flutter_assets/assets/";
+//    as+=url;
+//    url = as;
+//    alert(url);
 
     //progress/loading bar
     var onProgress = function (data) {
@@ -336,15 +340,16 @@ function removeModel() {
 
     $("#red, #green, #blue, #ambient_red, #ambient_green, #ambient_blue").slider("value", 127); //Reset colour sliders
 
-    amb.checked = false; rot1.checked = false; wire.checked = false;
-    model_wire.checked = false; phong.checked = false; xray.checked = false;
-    glow.checked = false; grid.checked = false; polar_grid.checked = false;
-    axis.checked = false; bBox.checked = false; smooth.checked = false; 
-    transform.checked = false, smooth.disabled = false; //Uncheck any checked boxes
+//    amb.checked = false; rot1.checked = false; wire.checked = false;
+//    model_wire.checked = false; phong.checked = false; xray.checked = false;
+//    glow.checked = false;
+//    grid.checked = false; polar_grid.checked = false;
+//    axis.checked = false; bBox.checked = false; smooth.checked = false;
+//    transform.checked = false, smooth.disabled = false; //Uncheck any checked boxes
     
     transformControls.detach(scene);
 
-    document.getElementById('smooth-model').innerHTML = "Smooth Model";
+//    document.getElementById('smooth-model').innerHTML = "Smooth Model";
 
     $('#rot_slider').slider({
         disabled: true //disable the rotation slider
@@ -446,25 +451,30 @@ function animate() {
 }
 var modelList = [
             {
-                name: "crash.obj", url: 'sample_models/crash2.obj'
+                name: "mesh.obj", url: 'mesh.obj'
+            },
+
+//            {
+//                name: "crash2.obj", url: 'file:///android_asset/flutter_assets/assets/sample_models/crash2.obj'
+//            },
+            {
+                name: "bear-obj.obj", url: 'sample_models/bear-obj.obj'
             },
             {
-                name: "bear.obj", url: 'sample_models/bear-obj.obj'
-            },
-            {
-                name: "car.obj", url: 'sample_models/car2.obj'
+                name: "car2.obj", url: 'sample_models/car2.obj'
                 //, objectRotation: new THREE.Euler(0, 3 * Math.PI / 2, 0)
-                        
+
             },
             {
-                name: "tiger.obj", url: 'sample_models/Tiger.obj'
+                name: "Tiger.obj", url: 'sample_models/Tiger.obj'
             },
             {
-                name: "dinosaur.obj", url: 'sample_models/Dinosaur_V02.obj'
+                name: "Dinosaur_V02.obj", url: 'sample_models/Dinosaur_V02.obj'
             },
             {
                 name: "skeleton.obj", url: 'sample_models/skeleton.obj'
             }
+
 ];
 
 function switchScene(index) {
