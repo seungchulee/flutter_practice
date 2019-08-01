@@ -182,6 +182,11 @@ class _CameraExampleState extends State {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -393,20 +398,25 @@ class _CameraExampleState extends State {
       return null;
     }
 
+
+
+
+    final Directory appDirectory = await getExternalStorageDirectory();
+//    final String pictureDirectory = '${appDirectory.path}/Pictures';
+     final String pictureDirectory = '${appDirectory.path}';
+    await Directory(pictureDirectory).create(recursive: true);
+    final String currentTime = DateTime.now().millisecondsSinceEpoch.toString();
+//    final String filePath = '$pictureDirectory/${currentTime}.jpg';
+    final String filePath = '$pictureDirectory/../../../../Pictures/${currentTime}.jpg';
+
+//    print(pictureDirectory);
+    print(filePath);
+
     // Do nothing if a capture is on progress
     if (controller.value.isTakingPicture) {
       return null;
     }
-    final Directory appDirectory = await getExternalStorageDirectory();
-    final String pictureDirectory = '${appDirectory.path}/Pictures';
 
-    await Directory(pictureDirectory).create(recursive: true);
-    final String currentTime = DateTime.now().millisecondsSinceEpoch.toString();
-//    final String filePath = '$pictureDirectory/${currentTime}.jpg';
-    final String filePath = '$pictureDirectory/../../../../../Pictures/${currentTime}.jpg';
-
-//    print(pictureDirectory);
-//    print(filePath);
     try {
       await controller.takePicture(filePath);
     } on CameraException catch (e) {
