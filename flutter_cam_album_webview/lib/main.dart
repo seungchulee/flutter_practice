@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'dart:io';
-
+import 'package:flutter/services.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_inappbrowser/flutter_inappbrowser.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 
 class albumpage extends StatefulWidget{
   @override
@@ -13,29 +14,134 @@ class albumpage extends StatefulWidget{
 }
 class _albumstate extends State<albumpage>
 {
+  List<Asset> images = List<Asset>();
+  String _error = 'No Error Dectected';
 
   @override
-  Widget build(BuildContext context)
-  {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('photos'),
-        ),
-        body: Row(
-          children: <Widget>[
-            RaisedButton(
-                child: Text("Next"),
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => webviewpage()),
-                  );
-                }
-            )
-          ],
-        )
+  void initState() {
+    super.initState();
+  }
+
+  Widget buildGridView() {
+    return GridView.count(
+      crossAxisCount: 3,
+      children: List.generate(images.length, (index) {
+        Asset asset = images[index];
+        return AssetThumb(
+          asset: asset,
+          width: 300,
+          height: 300,
+        );
+      }),
     );
   }
+
+  Future<void> deleteAssets() async {
+    await MultiImagePicker.deleteImages(assets: images);
+    setState(() {
+      images = List<Asset>();
+    });
+  }
+
+  Future<void> loadAssets() async {
+    List<Asset> resultList = List<Asset>();
+    String error = 'No Error Dectected';
+
+    try {
+      resultList = await MultiImagePicker.pickImages(
+          maxImages: 300,
+          enableCamera: true,
+          selectedAssets: images,
+          cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
+          materialOptions: MaterialOptions(
+            actionBarColor: "#abcdef",
+            actionBarTitle: "Example App",
+            allViewTitle: "All Photos",
+            useDetailsView: false,
+            selectCircleStrokeColor: "#000000",
+          ));
+    } on PlatformException catch (e) {
+      error = e.message;
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      images = resultList;
+      _error = error;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return new MaterialApp(
+      home: new Scaffold(
+        appBar: new AppBar(
+          title: const Text('album'),
+        ),
+        body: Column(
+          children: <Widget>[
+            Center(child: Text('Error: $_error')),
+            Center(
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    RaisedButton(
+                      child: Text("Pick images"),
+                      onPressed: loadAssets,
+                    ),
+                    RaisedButton(
+                        child: Text("Next"),
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => webviewpage()),
+                          );
+                        }
+                    )
+                  ]
+              ),
+            ),
+            images.length > 0
+                ? RaisedButton(
+              child: Text("Delete images"),
+              onPressed: deleteAssets,
+            )
+                : Container(),
+            Expanded(
+              child: buildGridView(),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+//  @override
+//  Widget build(BuildContext context)
+//  {
+//    return Scaffold(
+//        appBar: AppBar(
+//          title: Text('photos'),
+//        ),
+//        body: Row(
+//          children: <Widget>[
+//            RaisedButton(
+//                child: Text("Next"),
+//                onPressed: () {
+//                  Navigator.pushReplacement(
+//                    context,
+//                    MaterialPageRoute(builder: (context) => webviewpage()),
+//                  );
+//                }
+//            )
+//          ],
+//        )
+//    );
+//  }
 }
 
 class CameraExample extends StatefulWidget {
@@ -50,13 +156,12 @@ class _CameraExampleState extends State {
   List cameras;
   int selectedCameraIdx;
   String imagePath;
-
+  bool _allowWriteFile = false;
   final GlobalKey _scaffoldKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
-
     // Get the list of available cameras.
     // Then set the first camera as selected.
     availableCameras()
@@ -78,6 +183,10 @@ class _CameraExampleState extends State {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return Scaffold(
       key: _scaffoldKey,
       body: Column(
@@ -220,6 +329,7 @@ class _CameraExampleState extends State {
     }
   }
 
+
   Future _onCameraSwitched(CameraDescription cameraDescription) async {
     if (controller != null) {
       await controller.dispose();
@@ -287,14 +397,16 @@ class _CameraExampleState extends State {
     if (controller.value.isTakingPicture) {
       return null;
     }
-
-    final Directory appDirectory = await getApplicationDocumentsDirectory();
+    final Directory appDirectory = await getExternalStorageDirectory();
     final String pictureDirectory = '${appDirectory.path}/Pictures';
 
     await Directory(pictureDirectory).create(recursive: true);
     final String currentTime = DateTime.now().millisecondsSinceEpoch.toString();
-    final String filePath = '$pictureDirectory/${currentTime}.jpg';
+//    final String filePath = '$pictureDirectory/${currentTime}.jpg';
+    final String filePath = '$pictureDirectory/../../../../../Pictures/${currentTime}.jpg';
 
+//    print(pictureDirectory);
+//    print(filePath);
     try {
       await controller.takePicture(filePath);
     } on CameraException catch (e) {
@@ -603,5 +715,6 @@ class CameraApp extends StatelessWidget {
 }
 
 Future main() async {
+
   runApp(CameraApp());
 }
